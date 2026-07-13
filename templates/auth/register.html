@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+  <div class="col-md-5">
+    <div class="form-box">
+      <h3 class="mb-4">Create Account</h3>
+      <form method="POST" action = "{{ url_for('auth.register') }}" id = "regForm" novalidate autocomplete="off">
+
+        <div class="mb-3">
+          <label class="form-label">Full Name *</label>
+          <input type="text" name="full_name" class="form-control" placeholder="Enter full name" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email *</label>
+          <input type="text" name="email" id="reg-email" class="form-control" placeholder="abc@gmail.com" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Contact Number *</label>
+          <input type="tel" name="contact_no" id="reg-phone" class = "form-control" placeholder="Enter 10-digit phone number" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password *</label>
+          <input type="text" name="password" id="reg-pwd" class = "form-control" placeholder="Enter password" required onfocus="this.type='password'">
+          <div class="form-text">Min 8 chars, must have uppercase, lowercase and a number</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Confirm Password *</label>
+          <input type="text" name="confirm_password" id="reg-confirm" class="form-control" placeholder="Confirm password" required onfocus="this.type='password'">
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Register as *</label><br>
+          <div class="form-check form-check-inline">
+            <input class = "form-check-input" type="radio" name="role" value="trekker" id="r-trekker" checked>
+            <label class="form-check-label" for="r-trekker">Trekker</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type = "radio" name="role" value="staff" id="r-staff">
+            <label class="form-check-label" for="r-staff">Trek Staff</label>
+          </div>
+          <div class="form-text">Staff accounts need admin approval before login.</div>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Register</button>
+      </form>
+      <hr>
+      <p class="text-center mb-0">Already registered? <a href="{{url_for('auth.login')}}">Login here</a></p>
+    </div>
+  </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.getElementById('regForm').addEventListener('submit', function(   e ){
+  var pwd=document.getElementById('reg-pwd').value;
+  var confirm = document.getElementById('reg-confirm').value;
+  var phone  = document.getElementById('reg-phone').value.replace(/\D/g,'');
+  var email = document.getElementById('reg-email').value.trim();
+  var errors =[];
+
+  var gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  if (!gmailRegex.test(email)) {
+    errors.push("Email must be a valid @gmail.com address.");
+  }
+
+  if (phone.length === 0) {
+    errors.push("Contact number is required.");
+  } else if (phone.length !== 10) {
+    errors.push("Phone must be exactly 10 digits.");
+  }
+
+  if(pwd.length<8)  errors.push("Password must be at least 8 characters.");
+  if (! /[A-Z]/.test(pwd)) errors.push("Password needs at least one uppercase letter.");
+  if(!/[a-z]/.test(pwd))errors.push("Password needs at least one lowercase letter.");
+  if(!/\d/.test(pwd)) errors.push("Password needs at least one number.");
+  if(pwd!=confirm) errors.push("Passwords do not match.");
+
+  if (errors.length>0){
+    e.preventDefault();
+    alert(  errors.join('\n') );
+  }
+});
+</script>
+{% endblock %}
+
+{% endblock %}
