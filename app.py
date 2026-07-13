@@ -46,9 +46,11 @@ def dev_login_bypass(request):
 
 from routes.admin import admin_bp
 from routes.user import user_bp
+from routes.staff import staff_bp
 
 app.register_blueprint(admin_bp)
 app.register_blueprint(user_bp)
+app.register_blueprint(staff_bp)
 
 with app.app_context():
     db.create_all()

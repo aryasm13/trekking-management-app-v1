@@ -34,6 +34,9 @@
         <li class="nav-item"><a class="nav-link" href="{{ url_for('user.bookings') }}">My Bookings</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('user.history') }}">History</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('user.profile') }}">Profile</a></li>
+       {% elif current_user.role == 'staff' %}
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('staff.dashboard') }}">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('staff.profile') }}">Profile</a></li>
        {% endif %}
 
        <li class="nav-item"><span class="nav-link" style="color:#ffd700;">{{ current_user.full_name }} ({{ current_user.role }})</span></li>

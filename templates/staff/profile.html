@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Staff Profile{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Staff Profile</h2>
+
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="form-box">
+      <p class="text-muted mb-3">{{ current_user.email }} &bull; Status: {{ current_user.status.title() }} &bull; Member since {{ current_user.created_at.strftime('%b %Y') }}</p>
+
+      <form method="POST" action="{{ url_for('staff.profile') }}" id="staffProfileForm">
+
+        <h5 class="mb-3">Personal Details</h5>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Full Name *</label>
+            <input type="text" class="form-control" name="full_name" value="{{ current_user.full_name }}" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Contact Number</label>
+            <input type="tel" class="form-control" id="staff-phone" name="contact_no" value="{{ current_user.contact_no or '' }}" placeholder="10-digit number">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Emergency Contact Name</label>
+            <input type="text" class="form-control" name="emergency_contact" value="{{ profile.emergency_contact if profile else '' }}">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Emergency Contact Phone</label>
+            <input type="tel" class="form-control" name="emergency_phone" value="{{ profile.emergency_phone if profile else '' }}" placeholder="10-digit number">
+          </div>
+        </div>
+
+        <hr>
+        <h5 class="mb-3">Professional Details</h5>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Experience (years)</label>
+            <input type="number" class="form-control" name="experience_years" min="0" max="50" value="{{ profile.experience_years if profile and profile.experience_years else '' }}">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Specialization</label>
+            <input type="text" class="form-control" name="specialization" value="{{ profile.specialization if profile else '' }}" placeholder="e.g. High Altitude, Glacier Treks">
+          </div>
+          <div class="col-12 mb-3">
+            <label class="form-label">Bio / About</label>
+            <textarea class="form-control" name="bio" rows="4" placeholder="Tell trekkers about yourself...">{{ profile.bio if profile else '' }}</textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Save Profile</button>
+        <a href="{{ url_for('staff.dashboard') }}" class="btn btn-secondary ms-2">Back</a>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.getElementById('staffProfileForm').addEventListener('submit', function(e) {
+  var phone = document.getElementById('staff-phone').value.replace(/\D/g,'');
+  if (phone && phone.length !== 10) {
+    e.preventDefault();
+    alert('Contact number must be 10 digits.');
+  }
+});
+</script>
+{% endblock %}
+
+{% endblock %}

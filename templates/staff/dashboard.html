@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Staff Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Staff Dashboard</h2>
+  <a href="{{ url_for('staff.profile') }}" class="btn btn-outline-secondary">My Profile</a>
+</div>
+
+<p class="text-muted">Welcome, {{ current_user.full_name }}</p>
+
+{% if trek_stats %}
+
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="stat-box">
+      <div class="stat-number">{{ trek_stats|length }}</div>
+      <div class="stat-label">Assigned Treks</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-box">
+      <div class="stat-number">{{ trek_stats|sum(attribute='booked_count') }}</div>
+      <div class="stat-label">Active Bookings</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-box">
+      <div class="stat-number">{{ trek_stats|selectattr('trek.status', 'equalto', 'Open')|list|length }}</div>
+      <div class="stat-label">Open Treks</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-box">
+      <div class="stat-number">{{ trek_stats|selectattr('trek.status', 'equalto', 'Completed')|list|length }}</div>
+      <div class="stat-label">Completed</div>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header">Bookings vs Capacity</div>
+  <div class="card-body" style="height:280px;">
+    <canvas id="staffChart"></canvas>
+  </div>
+</div>
+
+<h4 class="mb-3">My Assigned Treks</h4>
+<div class="row">
+  {% for ts in trek_stats %}
+  {% set t = ts.trek %}
+  <div class="col-md-4 mb-3">
+    <div class="card h-100">
+      {% if t.image_path %}
+      <img src="{{ t.image_path }}" class="trek-img card-img-top" alt="{{ t.trek_name }}" onerror="this.style.display='none'">
+      {% endif %}
+      <div class="card-body">
+        <div class="mb-1">
+          <span class="status-badge status-{{ t.status.lower() }}">{{ t.status }}</span>
+          <span class="diff-{{ t.difficulty.lower() }}">{{ t.difficulty }}</span>
+        </div>
+        <h5 class="card-title">{{ t.trek_name }}</h5>
+        <p class="text-muted mb-1">{{ t.location }}</p>
+        <p class="mb-1"><small>{{ t.start_date.strftime('%d %b %Y') }} - {{ t.end_date.strftime('%d %b %Y') }}</small></p>
+        <p class="mb-2">Slots: {{ t.available_slots }}/{{ t.total_slots }} &mdash; {{ ts.booked_count }} booked</p>
+      </div>
+      <div class="card-footer">
+        <a href="{{ url_for('staff.trek_detail', trek_id=t.id) }}" class="btn btn-sm btn-success w-100">Manage Trek</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+<p class="text-muted">No treks assigned to you yet. Admin will assign them.</p>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+var labels = [], booked = [], total = [];
+{% for ts in trek_stats %}
+  labels.push("{{ ts.trek.trek_name }}");
+  booked.push({{ ts.booked_count }});
+  total.push({{ ts.trek.total_slots }});
+{% endfor %}
+
+var ctx = document.getElementById('staffChart').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: labels,
+    datasets: [
+      { label: 'Booked', data: booked, backgroundColor: '#198754' },
+      { label: 'Total Capacity', data: total, backgroundColor: '#dee2e6' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+  }
+});
+</script>
+{% endblock %}

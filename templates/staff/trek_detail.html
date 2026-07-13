@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}{{ trek.trek_name }} - Manage{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('staff.dashboard') }}" class="btn btn-secondary mb-3">Back to Dashboard</a>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>{{ trek.trek_name }}</h2>
+  <span class="status-badge status-{{ trek.status.lower() }}">{{ trek.status }}</span>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="form-box mb-3">
+      <h5>Trek Details</h5>
+      <table class="table table-sm">
+        <tr><th>Location</th><td>{{ trek.location }}</td></tr>
+        <tr><th>Difficulty</th><td><span class="diff-{{ trek.difficulty.lower() }}">{{ trek.difficulty }}</span></td></tr>
+        <tr><th>Duration</th><td>{{ trek.duration_days }} days</td></tr>
+        <tr><th>Start</th><td>{{ trek.start_date.strftime('%d %b %Y') }}</td></tr>
+        <tr><th>End</th><td>{{ trek.end_date.strftime('%d %b %Y') }}</td></tr>
+        <tr><th>Total Slots</th><td>{{ trek.total_slots }}</td></tr>
+        <tr><th>Available</th><td>{{ trek.available_slots }}</td></tr>
+      </table>
+      {% if trek.description %}<p class="text-muted small">{{ trek.description }}</p>{% endif %}
+    </div>
+
+    <div class="form-box">
+      <h5>Update Trek</h5>
+      <form method="POST" action="{{ url_for('staff.trek_update', trek_id=trek.id) }}">
+        <div class="mb-3">
+          <label class="form-label">Available Slots</label>
+          <input type="number" class="form-control" name="available_slots" value="{{ trek.available_slots }}" min="0" max="{{ trek.total_slots }}" required>
+          <div class="form-text">Max: {{ trek.total_slots }}</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Trek Status</label>
+          <select class="form-select" name="status" required>
+            {% for s in ['Open','Closed','Ongoing','Completed'] %}
+            <option value="{{ s }}" {% if trek.status == s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+          </select>
+          <div class="form-text">Setting Completed will close all active bookings.</div>
+        </div>
+        <button type="submit" class="btn btn-success w-100">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">Participants ({{ booked_count }} active)</div>
+      <div class="card-body p-0">
+        {% if participants %}
+        <table class="table table-bordered table-hover mb-0">
+          <thead class="table-light">
+            <tr><th>#</th><th>Trekker</th><th>Email</th><th>Contact</th><th>Booked On</th><th>Payment</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+          {% for b in participants %}
+            <tr>
+              <td>{{ b.id }}</td>
+              <td>{{ b.user.full_name }}</td>
+              <td>{{ b.user.email }}</td>
+              <td>{{ b.user.contact_no or '-' }}</td>
+              <td>{{ b.booking_date.strftime('%d %b %Y') }}</td>
+              <td>{{ b.payment_status }}</td>
+              <td><span class="status-badge status-{{ b.booking_status.lower() }}">{{ b.booking_status }}</span></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="p-3 text-muted mb-0">No participants yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
