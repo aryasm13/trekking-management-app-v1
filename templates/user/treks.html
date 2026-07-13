@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Browse Treks{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Browse Treks ({{ treks|length }} available)</h2>
+
+<form method="GET" action="{{ url_for('user.treks') }}" class="mb-4">
+  <div class="row g-2">
+    <div class="col-md-4">
+      <input type="text" class="form-control" name="search" value="{{ search }}" placeholder="Trek name...">
+    </div>
+    <div class="col-md-3">
+      <input type="text" class="form-control" name="location" value="{{ location }}" placeholder="Location...">
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" name="difficulty">
+        <option value="">All Difficulties</option>
+        {% for d in ['Easy','Moderate','Hard'] %}
+        <option value="{{ d }}" {% if difficulty == d %}selected{% endif %}>{{ d }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2 d-flex gap-1">
+      <button type="submit" class="btn btn-success">Filter</button>
+      {% if search or location or difficulty %}
+      <a href="{{ url_for('user.treks') }}" class="btn btn-outline-secondary">Clear</a>
+      {% endif %}
+    </div>
+  </div>
+</form>
+
+{% if treks %}
+<div class="row">
+{% for t in treks %}
+  <div class="col-md-4 mb-3">
+    <div class="card h-100">
+      {% if t.image_path %}
+      <img src="{{ t.image_path }}" class="trek-img card-img-top" alt="{{ t.trek_name }}" onerror="this.style.display='none'">
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">{{ t.trek_name }}</h5>
+        <p class="text-muted mb-1">{{ t.location }}</p>
+        <p class="mb-1">
+          <span class="diff-{{ t.difficulty.lower() }}">{{ t.difficulty }}</span>
+          &nbsp;&middot;&nbsp; {{ t.duration_days }} day(s)
+        </p>
+        <p class="mb-1"><small>{{ t.start_date.strftime('%d %b %Y') }} to {{ t.end_date.strftime('%d %b %Y') }}</small></p>
+        <p class="mb-2">
+          Slots: <strong>{{ t.available_slots }}</strong>/{{ t.total_slots }}
+          {% if t.available_slots == 0 %}<span class="text-danger"> (Full)</span>{% endif %}
+        </p>
+        {% if t.id in booked_trek_ids %}
+        <span class="badge bg-success">Already Booked</span>
+        {% endif %}
+      </div>
+      <div class="card-footer">
+        <a href="{{ url_for('user.trek_detail', trek_id=t.id) }}" class="btn btn-sm btn-success w-100">
+          {% if t.id in booked_trek_ids %}View Details{% else %}Book Now{% endif %}
+        </a>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+{% else %}
+<p class="text-muted">No treks found.
+  {% if search or location or difficulty %}
+  <a href="{{ url_for('user.treks') }}">Clear filters</a>
+  {% endif %}
+</p>
+{% endif %}
+{% endblock %}

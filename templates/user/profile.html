@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">My Profile</h2>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-box mb-4">
+      <h5>Account Details</h5>
+      <form method="POST" action="{{ url_for('user.profile') }}" id="profileForm">
+        <div class="mb-3">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-control" name="full_name" value="{{ current_user.full_name }}" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" value="{{ current_user.email }}" disabled>
+          <div class="form-text">Email cannot be changed.</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Contact Number</label>
+          <input type="tel" class="form-control" name="contact_no" id="prof-phone" value="{{ current_user.contact_no or '' }}" placeholder="10-digit number">
+        </div>
+        <button type="submit" class="btn btn-success">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-box">
+      <h5>Account Info</h5>
+      <table class="table table-sm">
+        <tr><th>Role</th><td>{{ current_user.role.title() }}</td></tr>
+        <tr><th>Status</th><td><span class="status-badge status-{{ current_user.status }}">{{ current_user.status.title() }}</span></td></tr>
+        <tr><th>Member Since</th><td>{{ current_user.created_at.strftime('%B %Y') }}</td></tr>
+        <tr><th>Total Bookings</th><td>{{ total_treks }}</td></tr>
+        <tr><th>Completed Treks</th><td>{{ completed_treks }}</td></tr>
+      </table>
+      <a href="{{ url_for('user.bookings') }}" class="btn btn-sm btn-outline-secondary me-2">My Bookings</a>
+      <a href="{{ url_for('user.history') }}" class="btn btn-sm btn-outline-secondary">History</a>
+    </div>
+  </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.getElementById('profileForm').addEventListener('submit', function(e) {
+  var phone = document.getElementById('prof-phone').value.replace(/\D/g,'');
+  if (phone && phone.length !== 10) {
+    e.preventDefault();
+    alert('Contact number must be exactly 10 digits.');
+  }
+});
+</script>
+{% endblock %}
+
+{% endblock %}

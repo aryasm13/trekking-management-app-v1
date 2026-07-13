@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}My Trekking History{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Trekking History ({{ history|length }})</h2>
+
+{% if history %}
+<div class="row mb-3">
+  <div class="col-md-3">
+    <div class="stat-box">
+      <div class="stat-number">{{ history|selectattr('booking_status','equalto','Completed')|list|length }}</div>
+      <div class="stat-label">Completed</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-box">
+      <div class="stat-number">{{ history|selectattr('booking_status','equalto','Cancelled')|list|length }}</div>
+      <div class="stat-label">Cancelled</div>
+    </div>
+  </div>
+</div>
+
+<table class="table table-bordered table-hover">
+  <thead class="table-light">
+    <tr><th>#</th><th>Trek</th><th>Location</th><th>Difficulty</th><th>Duration</th><th>Trek Dates</th><th>Booked On</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+  {% for b in history %}
+    <tr>
+      <td>{{ b.id }}</td>
+      <td>{{ b.trek.trek_name }}</td>
+      <td>{{ b.trek.location }}</td>
+      <td><span class="diff-{{ b.trek.difficulty.lower() }}">{{ b.trek.difficulty }}</span></td>
+      <td>{{ b.trek.duration_days }} day(s)</td>
+      <td><small>{{ b.trek.start_date.strftime('%d %b') }} - {{ b.trek.end_date.strftime('%d %b %Y') }}</small></td>
+      <td>{{ b.booking_date.strftime('%d %b %Y') }}</td>
+      <td><span class="status-badge status-{{ b.booking_status.lower() }}">{{ b.booking_status }}</span></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="text-muted">No trekking history yet. <a href="{{ url_for('user.treks') }}">Browse treks</a></p>
+{% endif %}
+{% endblock %}

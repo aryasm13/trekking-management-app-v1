@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>My Bookings ({{ bookings|length }})</h2>
+  <a href="{{ url_for('user.treks') }}" class="btn btn-success">Find More Treks</a>
+</div>
+
+{% if bookings %}
+<table class="table table-bordered table-hover">
+  <thead class="table-light">
+    <tr><th>#</th><th>Trek</th><th>Location</th><th>Dates</th><th>Booked On</th><th>Trek Status</th><th>Action</th></tr>
+  </thead>
+  <tbody>
+  {% for b in bookings %}
+    <tr>
+      <td>{{ b.id }}</td>
+      <td>{{ b.trek.trek_name }}</td>
+      <td>{{ b.trek.location }}</td>
+      <td><small>{{ b.trek.start_date.strftime('%d %b') }} - {{ b.trek.end_date.strftime('%d %b %Y') }}</small></td>
+      <td>{{ b.booking_date.strftime('%d %b %Y') }}</td>
+      <td><span class="status-badge status-{{ b.trek.status.lower() }}">{{ b.trek.status }}</span></td>
+      <td>
+        {% if b.trek.status not in ['Completed', 'Ongoing'] %}
+        <form method="POST" action="{{ url_for('user.cancel_booking', booking_id=b.id) }}" class="d-inline" onsubmit="return confirm('Cancel this booking?')">
+          <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+        </form>
+        {% else %}
+        <span class="text-muted small">Cannot cancel</span>
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="text-muted">You have no active bookings. <a href="{{ url_for('user.treks') }}">Browse treks</a></p>
+{% endif %}
+
+<p class="mt-3"><a href="{{ url_for('user.history') }}">View booking history</a></p>
+{% endblock %}

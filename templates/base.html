@@ -28,6 +28,12 @@
         <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.users') }}">Users</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.bookings') }}">Bookings</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.search') }}">Search</a></li>
+       {% elif current_user.role == 'trekker' %}
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('user.dashboard') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('user.treks') }}">Browse Treks</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('user.bookings') }}">My Bookings</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('user.history') }}">History</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('user.profile') }}">Profile</a></li>
        {% endif %}
 
        <li class="nav-item"><span class="nav-link" style="color:#ffd700;">{{ current_user.full_name }} ({{ current_user.role }})</span></li>
