@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Search</h2>
+
+<form method="GET" action="{{ url_for('admin.search') }}" class="mb-4">
+  <div class="row g-2">
+    <div class="col-md-6">
+      <input type="text" name="q" class="form-control" value="{{ query }}" placeholder="Name, email, location or ID..." autofocus>
+    </div>
+    <div class="col-md-3">
+      <select name="type" class="form-select">
+        <option value="all" {% if search_type == 'all' %}selected{% endif %}>All</option>
+        <option value="trek" {% if search_type == 'trek' %}selected{% endif %}>Treks</option>
+        <option value="user" {% if search_type == 'user' %}selected{% endif %}>Trekkers</option>
+        <option value="staff" {% if search_type == 'staff' %}selected{% endif %}>Staff</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-success w-100">Search</button>
+    </div>
+  </div>
+</form>
+
+{% if query %}
+
+  {% if search_type in ('all','trek') %}
+  <h5>Treks <span class="badge bg-secondary">{{ results.treks|length }}</span></h5>
+  {% if results.treks %}
+  <table class="table table-bordered table-sm mb-4">
+    <thead class="table-light"><tr><th>#</th><th>Name</th><th>Location</th><th>Difficulty</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>
+    {% for t in results.treks %}
+      <tr>
+        <td>{{ t.id }}</td>
+        <td>{{ t.trek_name }}</td>
+        <td>{{ t.location }}</td>
+        <td><span class="diff-{{ t.difficulty.lower() }}">{{ t.difficulty }}</span></td>
+        <td><span class="status-badge status-{{ t.status.lower() }}">{{ t.status }}</span></td>
+        <td><a href="{{ url_for('admin.trek_edit', trek_id=t.id) }}" class="btn btn-sm btn-warning">Edit</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-muted">No treks found for "{{ query }}".</p>
+  {% endif %}
+  {% endif %}
+
+  {% if search_type in ('all','user') %}
+  <h5>Trekkers <span class="badge bg-secondary">{{ results.users|length }}</span></h5>
+  {% if results.users %}
+  <table class="table table-bordered table-sm mb-4">
+    <thead class="table-light"><tr><th>#</th><th>Name</th><th>Email</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>
+    {% for u in results.users %}
+      <tr>
+        <td>{{ u.id }}</td>
+        <td>{{ u.full_name }}</td>
+        <td>{{ u.email }}</td>
+        <td><span class="status-badge status-{{ u.status }}">{{ u.status.title() }}</span></td>
+        <td>
+          {% if u.status != 'blacklisted' %}
+          <form method="POST" action="{{ url_for('admin.user_blacklist', user_id=u.id) }}" class="d-inline" onsubmit="return confirm('Blacklist?')">
+            <input type="hidden" name="next" value="{{ url_for('admin.search', q=query, type=search_type) }}">
+            <button type="submit" class="btn btn-sm btn-danger">Blacklist</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-muted">No trekkers found for "{{ query }}".</p>
+  {% endif %}
+  {% endif %}
+
+  {% if search_type in ('all','staff') %}
+  <h5>Staff <span class="badge bg-secondary">{{ results.staff|length }}</span></h5>
+  {% if results.staff %}
+  <table class="table table-bordered table-sm mb-4">
+    <thead class="table-light"><tr><th>#</th><th>Name</th><th>Email</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>
+    {% for s in results.staff %}
+      <tr>
+        <td>{{ s.id }}</td>
+        <td>{{ s.full_name }}</td>
+        <td>{{ s.email }}</td>
+        <td><span class="status-badge status-{{ s.status }}">{{ s.status.title() }}</span></td>
+        <td>
+          {% if s.status == 'pending' %}
+          <form method="POST" action="{{ url_for('admin.staff_approve', user_id=s.id) }}" class="d-inline">
+            <button type="submit" class="btn btn-sm btn-success">Approve</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-muted">No staff found for "{{ query }}".</p>
+  {% endif %}
+  {% endif %}
+
+{% else %}
+<p class="text-muted">Enter a term above to search.</p>
+{% endif %}
+{% endblock %}

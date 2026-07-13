@@ -1,0 +1,77 @@
+body{
+    background-color: #f0ece4;
+    font-family: Arial, sans-serif;
+    font-size:15px;
+}
+nav.navbar{
+    background-color:#4a7c59 !important;
+    padding-top:8px;
+    padding-bottom: 8px;
+}
+.navbar-brand{
+    font-weight:bold;
+    font-size:1.3rem;
+}
+.nav-link{color:#ddd !important;}
+.nav-link:hover{color:#fff !important;}
+.container{
+  padding-top:15px;
+}
+footer{
+    background:#ddd;
+    border-top:2px solid #aaa;
+    padding:12px 0;
+    text-align:center;
+    font-size:0.8rem;
+    color:#555;
+    margin-top:40px;
+}
+.stat-box{
+    background:#fff;
+    border:1px solid #bbb;
+    padding: 16px 12px;
+    text-align:center;
+    margin-bottom:12px;
+    border-left:4px solid #4a7c59;
+}
+.stat-number{
+  font-size:1.9rem;
+  font-weight:700;
+  color:#2d5a3d;
+}
+.stat-label{font-size:0.82rem;color:#666;}
+.form-box{
+    background: white;
+    padding:22px 20px;
+    border:1px solid #ccc;
+    margin-top:10px;
+    margin-bottom:15px;
+}
+.status-badge{
+    padding:2px 7px;
+    font-size:0.78rem;
+    border-radius:3px;
+    font-weight:600;
+}
+.status-pending{background:#fff3cd;color:#7d5a00;}
+.status-approved{background:#d4edda;color:#155724;}
+.status-open{background:#c3e6cb;color:#155724;}
+.status-closed{background:#f5c6cb;color:#721c24;}
+.status-completed{background:#d6d8db;color:#333;}
+.status-ongoing{background:#d1ecf1;color:#0c5460;}
+.status-booked{background:#d4edda;color:#155724;}
+.status-blacklisted{background:#f5c6cb;color:#721c24;}
+.status-cancelled{background:#f5c6cb;color:#721c24;}
+.diff-easy{background:#c3e6cb;color:#155724;padding:1px 6px;border-radius:3px;font-size:0.8rem;}
+.diff-moderate{background:#fff3cd;color:#856404;padding:1px 6px;border-radius:3px;font-size:0.8rem;}
+.diff-hard{background:#f5c6cb;color:#721c24;padding:1px 6px;border-radius:3px;font-size:0.8rem;}
+.trek-img{
+  height:160px;
+  object-fit:cover;
+  width:100%;
+}
+table.table thead{
+    background-color:#e8f0e9;
+}
+.btn-success{background-color:#4a7c59;border-color:#3d6b4a;}
+.btn-success:hover{background-color:#3d6b4a;}

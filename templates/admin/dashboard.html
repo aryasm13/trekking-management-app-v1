@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Admin Dashboard</h2>
+
+{% if pending_staff > 0 %}
+<div class="alert alert-warning">{{ pending_staff }} staff member(s) waiting for approval. <a href="{{ url_for('admin.staff', status='pending') }}">Review</a></div>
+{% endif %}
+
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="stat-box">
+      <div class="stat-number">{{ total_treks }}</div>
+      <div class="stat-label">Total Treks</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-box">
+      <div class="stat-number">{{ total_users }}</div>
+      <div class="stat-label">Trekkers</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-box">
+      <div class="stat-number">{{ total_staff }}</div>
+      <div class="stat-label">Staff</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-box">
+      <div class="stat-number">{{ total_bookings }}</div>
+      <div class="stat-label">Bookings</div>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-3">
+  {% for status_name, cnt in trek_status_counts.items() %}
+  <div class="col-md-2 mb-2">
+    <div class="stat-box">
+      <div class="stat-number" style="font-size:1.4rem;">{{ cnt }}</div>
+      <span class="status-badge status-{{ status_name.lower() }}">{{ status_name }}</span>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">Trek Status Chart</div>
+      <div class="card-body" style="height:280px;">
+        <canvas id="statusChart"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">Overview</div>
+      <div class="card-body" style="height:280px;">
+        <canvas id="overviewChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-7">
+    <div class="card mb-3">
+      <div class="card-header d-flex justify-content-between">
+        <span>Recent Treks</span>
+        <a href="{{ url_for('admin.treks') }}" class="btn btn-sm btn-outline-secondary">View All</a>
+      </div>
+      <div class="card-body p-0">
+        {% if recent_treks %}
+        <table class="table table-bordered table-hover mb-0">
+          <thead class="table-light">
+            <tr><th>Trek Name</th><th>Difficulty</th><th>Slots</th><th>Status</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+          {% for t in recent_treks %}
+            <tr>
+              <td>{{ t.trek_name }}<br><small class="text-muted">{{ t.location }}</small></td>
+              <td><span class="diff-{{ t.difficulty.lower() }}">{{ t.difficulty }}</span></td>
+              <td>{{ t.available_slots }}/{{ t.total_slots }}</td>
+              <td><span class="status-badge status-{{ t.status.lower() }}">{{ t.status }}</span></td>
+              <td><a href="{{ url_for('admin.trek_edit', trek_id=t.id) }}" class="btn btn-sm btn-warning">Edit</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="p-3 text-muted mb-0">No treks created yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-5">
+    <div class="card mb-3">
+      <div class="card-header d-flex justify-content-between">
+        <span>Recent Bookings</span>
+        <a href="{{ url_for('admin.bookings') }}" class="btn btn-sm btn-outline-secondary">View All</a>
+      </div>
+      <div class="card-body p-0">
+        {% if recent_bookings %}
+        <table class="table table-bordered mb-0">
+          <thead class="table-light">
+            <tr><th>User</th><th>Trek</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+          {% for b in recent_bookings %}
+            <tr>
+              <td>{{ b.user.full_name }}</td>
+              <td>{{ b.trek.trek_name }}</td>
+              <td><span class="status-badge status-{{ b.booking_status.lower() }}">{{ b.booking_status }}</span></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="p-3 text-muted mb-0">No bookings yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mb-3">
+  <a href="{{ url_for('admin.trek_new') }}" class="btn btn-success me-2">+ New Trek</a>
+  <a href="{{ url_for('admin.staff', status='pending') }}" class="btn btn-warning me-2">Approve Staff</a>
+  <a href="{{ url_for('admin.search') }}" class="btn btn-secondary">Search</a>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+var ctx1 = document.getElementById('statusChart').getContext('2d');
+new Chart(ctx1, {
+  type: 'doughnut',
+  data: {
+    labels: ['Pending','Approved','Open','Closed','Completed'],
+    datasets: [{
+      data: [
+        {{ trek_status_counts.get('Pending', 0) }},
+        {{ trek_status_counts.get('Approved', 0) }},
+        {{ trek_status_counts.get('Open', 0) }},
+        {{ trek_status_counts.get('Closed', 0) }},
+        {{ trek_status_counts.get('Completed', 0) }}
+      ],
+      backgroundColor: ['#ffc107','#0d6efd','#198754','#dc3545','#6c757d']
+    }]
+  },
+  options: { responsive: true, maintainAspectRatio: false }
+});
+
+var ctx2 = document.getElementById('overviewChart').getContext('2d');
+new Chart(ctx2, {
+  type: 'bar',
+  data: {
+    labels: ['Treks','Trekkers','Staff','Bookings'],
+    datasets: [{
+      label: 'Count',
+      data: [{{ total_treks }}, {{ total_users }}, {{ total_staff }}, {{ total_bookings }}],
+      backgroundColor: ['#198754','#0d6efd','#ffc107','#6f42c1']
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+  }
+});
+</script>
+{% endblock %}

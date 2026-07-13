@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}{{ 'New Trek' if action == 'new' else 'Edit Trek' }}{% endblock %}
+
+{% block content %}
+<h2>{{ 'Create New Trek' if action == 'new' else 'Edit: ' + trek.trek_name }}</h2>
+<a href="{{ url_for('admin.treks') }}" class="btn btn-secondary mb-3">Back to Treks</a>
+
+<div class="form-box">
+  <form method="POST" action="{{ url_for('admin.trek_new') if action == 'new' else url_for('admin.trek_edit', trek_id=trek.id) }}" id="trek-form">
+
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        <label class="form-label">Trek Name *</label>
+        <input type="text" class="form-control" name="trek_name" value="{{ form_data.get('trek_name', trek.trek_name if trek else '') }}" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Location *</label>
+        <input type="text" class="form-control" name="location" value="{{ form_data.get('location', trek.location if trek else '') }}" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Difficulty *</label>
+        <select class="form-select" name="difficulty" required>
+          <option value="">Select...</option>
+          {% for d in ['Easy','Moderate','Hard'] %}
+          <option value="{{ d }}" {% if form_data.get('difficulty', trek.difficulty if trek else '') == d %}selected{% endif %}>{{ d }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Duration (days) *</label>
+        <input type="number" class="form-control" name="duration_days" value="{{ form_data.get('duration_days', trek.duration_days if trek else '') }}" min="1" required>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Total Slots *</label>
+        <input type="number" class="form-control" name="total_slots" value="{{ form_data.get('total_slots', trek.total_slots if trek else '') }}" min="1" required>
+        {% if trek %}<div class="form-text">Currently {{ trek.available_slots }} available</div>{% endif %}
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Status</label>
+        <select class="form-select" name="status" {% if action == 'new' %}disabled{% endif %}>
+          {% for s in ['Pending','Approved','Open','Closed','Ongoing','Completed'] %}
+          <option value="{{ s }}" {% if (action == 'edit' and form_data.get('status', trek.status) == s) or (action == 'new' and s == 'Pending') %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+        </select>
+        {% if action == 'new' %}<input type="hidden" name="status" value="Pending"><div class="form-text">New treks start as Pending</div>{% endif %}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Start Date *</label>
+        <input type="date" class="form-control" name="start_date" value="{{ form_data.get('start_date', trek.start_date.strftime('%Y-%m-%d') if trek else '') }}" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">End Date *</label>
+        <input type="date" class="form-control" name="end_date" value="{{ form_data.get('end_date', trek.end_date.strftime('%Y-%m-%d') if trek else '') }}" required>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Assign Staff</label>
+      <select class="form-select" name="assigned_staff_id">
+        <option value="">-- Unassigned --</option>
+        {% for s in staff_list %}
+        <option value="{{ s.id }}" {% if (form_data.get('assigned_staff_id') or (trek.assigned_staff_id if trek else None))|string == s.id|string %}selected{% endif %}>{{ s.full_name }} (ID: {{ s.id }})</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Image URL (optional)</label>
+      <input type="url" class="form-control" name="image_url" value="{{ form_data.get('image_url', trek.image_path if trek else '') }}" placeholder="https://...">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <textarea class="form-control" name="description" rows="4">{{ form_data.get('description', trek.description if trek else '') }}</textarea>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-success">{{ 'Create Trek' if action == 'new' else 'Save Changes' }}</button>
+      <a href="{{ url_for('admin.treks') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% block extra_js %}
+<script>
+document.getElementById('trek-form').addEventListener('submit', function(e) {
+  var start = document.querySelector('[name=start_date]').value;
+  var end = document.querySelector('[name=end_date]').value;
+  if (start && end && new Date(end) < new Date(start)) {
+    e.preventDefault();
+    alert('End date cannot be before start date.');
+  }
+});
+</script>
+{% endblock %}
+
+{% endblock %}

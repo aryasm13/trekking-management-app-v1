@@ -14,7 +14,3 @@ This application manages trekking activities involving administrators, trek staf
 - CSS
 - Bootstrap
 - SQLite
-
-## Current Status
-
-Milestone 0 - GitHub Repository Setup

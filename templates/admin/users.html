@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Trekkers{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Trekker Accounts</h2>
+
+<div class="mb-3">
+  <a href="{{ url_for('admin.users') }}" class="btn btn-sm {% if not status_filter %}btn-secondary{% else %}btn-outline-secondary{% endif %}">All</a>
+  {% for s in ['approved','blacklisted'] %}
+  <a href="{{ url_for('admin.users', status=s) }}" class="btn btn-sm {% if status_filter == s %}btn-secondary{% else %}btn-outline-secondary{% endif %}">{{ s.title() }}</a>
+  {% endfor %}
+</div>
+
+{% if users %}
+<table class="table table-bordered table-hover">
+  <thead class="table-light">
+    <tr>
+      <th>#</th><th>Name</th><th>Email</th><th>Contact</th><th>Registered</th><th>Bookings</th><th>Status</th><th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for u in users %}
+    <tr>
+      <td>{{ u.id }}</td>
+      <td>{{ u.full_name }}</td>
+      <td>{{ u.email }}</td>
+      <td>{{ u.contact_no or '-' }}</td>
+      <td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+      <td><span class="badge bg-secondary">{{ u.bookings|length }}</span></td>
+      <td><span class="status-badge status-{{ u.status }}">{{ u.status.title() }}</span></td>
+      <td>
+        {% if u.status != 'blacklisted' %}
+        <form method="POST" action="{{ url_for('admin.user_blacklist', user_id=u.id) }}" class="d-inline" onsubmit="return confirm('Blacklist this user?')">
+          <button type="submit" class="btn btn-sm btn-danger">Blacklist</button>
+        </form>
+        {% else %}
+        <form method="POST" action="{{ url_for('admin.user_activate', user_id=u.id) }}" class="d-inline">
+          <button type="submit" class="btn btn-sm btn-success">Activate</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="text-muted">No trekkers found.</p>
+{% endif %}
+{% endblock %}
