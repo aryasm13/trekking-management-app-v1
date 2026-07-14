@@ -9,7 +9,7 @@ def create_admin():
     new_adm = User(
         full_name = "System Administrator",
         email="admintrek@gmail.com",
-        password_hash=generate_password_hash("admin123"),
+        password_hash=generate_password_hash("Admin123"),
         role="admin",
         status="approved",
         contact_no="9876543210"
