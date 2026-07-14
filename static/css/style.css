@@ -1,77 +1,181 @@
-body{
+body {
     background-color: #f0ece4;
     font-family: Arial, sans-serif;
-    font-size:15px;
+    font-size: 15px;
+    padding-bottom: 60px;
 }
-nav.navbar{
-    background-color:#4a7c59 !important;
-    padding-top:8px;
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("/static/images/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.45;
+    z-index: -1;
+}
+
+nav.navbar {
+    background-color: #4a7c59 !important;
+    padding-top: 8px;
     padding-bottom: 8px;
 }
-.navbar-brand{
-    font-weight:bold;
-    font-size:1.3rem;
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.3rem;
 }
-.nav-link{color:#ddd !important;}
-.nav-link:hover{color:#fff !important;}
-.container{
-  padding-top:15px;
+
+.nav-link {
+    color: lightgray !important;
 }
-footer{
-    background:#ddd;
-    border-top:2px solid #aaa;
-    padding:12px 0;
-    text-align:center;
-    font-size:0.8rem;
-    color:#555;
-    margin-top:40px;
+
+.nav-link:hover {
+    color: white !important;
 }
-.stat-box{
-    background:#fff;
-    border:1px solid #bbb;
-    padding: 16px 12px;
-    text-align:center;
-    margin-bottom:12px;
-    border-left:4px solid #4a7c59;
+
+.container {
+    padding-top: 15px;
 }
-.stat-number{
-  font-size:1.9rem;
-  font-weight:700;
-  color:#2d5a3d;
+
+footer {
+    background: lightgray;
+    border-top: 2px solid gray;
+    padding: 12px 0;
+    text-align: center;
+    font-size: 0.8rem;
+    color: dimgray;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
 }
-.stat-label{font-size:0.82rem;color:#666;}
-.form-box{
+
+.stat-box {
     background: white;
-    padding:22px 20px;
-    border:1px solid #ccc;
-    margin-top:10px;
-    margin-bottom:15px;
+    border: 1px solid silver;
+    padding: 16px 12px;
+    text-align: center;
+    margin-bottom: 12px;
+    border-left: 4px solid #4a7c59;
 }
-.status-badge{
-    padding:2px 7px;
-    font-size:0.78rem;
-    border-radius:3px;
-    font-weight:600;
+
+.stat-number {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #2d5a3d;
 }
-.status-pending{background:#fff3cd;color:#7d5a00;}
-.status-approved{background:#d4edda;color:#155724;}
-.status-open{background:#c3e6cb;color:#155724;}
-.status-closed{background:#f5c6cb;color:#721c24;}
-.status-completed{background:#d6d8db;color:#333;}
-.status-ongoing{background:#d1ecf1;color:#0c5460;}
-.status-booked{background:#d4edda;color:#155724;}
-.status-blacklisted{background:#f5c6cb;color:#721c24;}
-.status-cancelled{background:#f5c6cb;color:#721c24;}
-.diff-easy{background:#c3e6cb;color:#155724;padding:1px 6px;border-radius:3px;font-size:0.8rem;}
-.diff-moderate{background:#fff3cd;color:#856404;padding:1px 6px;border-radius:3px;font-size:0.8rem;}
-.diff-hard{background:#f5c6cb;color:#721c24;padding:1px 6px;border-radius:3px;font-size:0.8rem;}
-.trek-img{
-  height:160px;
-  object-fit:cover;
-  width:100%;
+
+.stat-label {
+    font-size: 0.82rem;
+    color: gray;
 }
-table.table thead{
-    background-color:#e8f0e9;
+
+.form-box {
+    background: white;
+    padding: 22px 20px;
+    border: 1px solid silver;
+    margin-top: 10px;
+    margin-bottom: 15px;
 }
-.btn-success{background-color:#4a7c59;border-color:#3d6b4a;}
-.btn-success:hover{background-color:#3d6b4a;}
+
+.status-badge {
+    padding: 2px 7px;
+    font-size: 0.78rem;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+.status-pending {
+    background: lightyellow;
+    color: saddlebrown;
+}
+
+.status-approved {
+    background: honeydew;
+    color: darkgreen;
+}
+
+.status-open {
+    background: honeydew;
+    color: darkgreen;
+}
+
+.status-closed {
+    background: pink;
+    color: darkred;
+}
+
+.status-completed {
+    background: lightgray;
+    color: dimgray;
+}
+
+.status-ongoing {
+    background: lightcyan;
+    color: teal;
+}
+
+.status-booked {
+    background: honeydew;
+    color: darkgreen;
+}
+
+.status-blacklisted {
+    background: pink;
+    color: darkred;
+}
+
+.status-cancelled {
+    background: pink;
+    color: darkred;
+}
+
+.diff-easy {
+    background: honeydew;
+    color: darkgreen;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+}
+
+.diff-moderate {
+    background: lightyellow;
+    color: saddlebrown;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+}
+
+.diff-hard {
+    background: pink;
+    color: darkred;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+}
+
+.trek-img {
+    height: 160px;
+    object-fit: cover;
+    width: 100%;
+}
+
+table.table thead {
+    background-color: honeydew;
+}
+
+.btn-success {
+    background-color: #4a7c59;
+    border-color: #3d6b4a;
+}
+
+.btn-success:hover {
+    background-color: #3d6b4a;
+}
