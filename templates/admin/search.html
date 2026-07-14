@@ -94,6 +94,10 @@
           <form method="POST" action="{{ url_for('admin.staff_approve', user_id=s.id) }}" class="d-inline">
             <button type="submit" class="btn btn-sm btn-success">Approve</button>
           </form>
+          {% elif s.status != 'blacklisted' %}
+          <form method="POST" action="{{ url_for('admin.staff_blacklist', user_id=s.id) }}" class="d-inline" onsubmit="return confirm('Blacklist staff?')">
+            <button type="submit" class="btn btn-sm btn-danger">Blacklist</button>
+          </form>
           {% endif %}
         </td>
       </tr>
