@@ -14,6 +14,8 @@ This application manages trekking activities involving administrators, trek staf
 - CSS
 - Bootstrap
 - SQLite
+- Werkzeug
+- SQLAlchemy
 
 ## How to Run the Project (Step-by-Step)
 
@@ -86,4 +88,3 @@ If you get `sqlalchemy.exc.OperationalError` (no such column):
 1. Stop the server (`Ctrl + C`).
 2. Delete the database file `instance/trek.db`.
 3. Start the server again (`python app.py`).
-This drops the old tables and builds a clean database.
