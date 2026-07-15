@@ -103,7 +103,7 @@ def run_seeder():
             available_slots= 11,description="Beautiful winter trek in Uttarakhand.",
             start_date= datetime.strptime("2026-12-10","%Y-%m-%d").date(),
             end_date=datetime.strptime("2026-12-16","%Y-%m-%d").date(),
-            status="Open",assigned_staff_id=s_objects["Rohan Joshi"].id
+            status="Open",assigned_staff_id=s_objects["Rohan Joshi"].id,price=4500
         )
         tk2 = Trek(
             trek_name= "Valley of Flowers", location="Himalayas, India",
@@ -111,7 +111,7 @@ def run_seeder():
             available_slots=17,description="World heritage site alpine flowers meadow.",
             start_date=datetime.strptime("2026-07-01","%Y-%m-%d").date(),
             end_date= datetime.strptime("2026-07-06","%Y-%m-%d").date(),
-            status="Completed",assigned_staff_id=s_objects["Neha Gupta"].id
+            status="Completed",assigned_staff_id=s_objects["Neha Gupta"].id,price=6000
         )
         tk3=Trek(
             trek_name="Hampta Pass Trek",location="Himachal Pradesh",
@@ -119,7 +119,7 @@ def run_seeder():
             available_slots=10,description="Dramatic crossover trek from Kullu valley to Spiti.",
             start_date=datetime.strptime("2026-07-10","%Y-%m-%d").date(),
             end_date=datetime.strptime("2026-07-16","%Y-%m-%d").date(),
-            status="Ongoing",assigned_staff_id=s_objects["Rohan Joshi"].id
+            status="Ongoing",assigned_staff_id=s_objects["Rohan Joshi"].id,price=7500
         )
         tk4=Trek(
             trek_name="Beas Kund Hike",location="Manali",
@@ -127,7 +127,7 @@ def run_seeder():
             available_slots= 10,description="Short trek to source of Beas river.",
             start_date=datetime.strptime("2026-09-05","%Y-%m-%d").date(),
             end_date=datetime.strptime("2026-09-08","%Y-%m-%d").date(),
-            status="Approved",assigned_staff_id=s_objects["Neha Gupta"].id
+            status="Approved",assigned_staff_id=s_objects["Neha Gupta"].id,price=2500
         )
         tk5 = Trek(
             trek_name="Roopkund Trek Mystery",location="Garhwal Himalayas",
@@ -135,7 +135,7 @@ def run_seeder():
             available_slots=8,description="High altitude glacial lake trek.",
             start_date=datetime.strptime("2026-10-01","%Y-%m-%d").date(),
             end_date=datetime.strptime("2026-10-08","%Y-%m-%d").date(),
-            status="Pending"
+            status="Pending",price=9500
         )
         tk6=Trek(
             trek_name="Ratangad Fort Trek",location="Sahyadri, Maharashtra",
@@ -143,7 +143,7 @@ def run_seeder():
             available_slots=21,description="Jewel fort of Maharashtra.",
             start_date=datetime.strptime("2026-08-15","%Y-%m-%d").date(),
             end_date=datetime.strptime("2026-08-16","%Y-%m-%d").date(),
-            status="Open",assigned_staff_id=s_objects["Vikram Singh"].id
+            status="Open",assigned_staff_id=s_objects["Vikram Singh"].id,price=1800
         )
         tk7=Trek(
             trek_name="Rajmachi Fort Trek",location="Sahyadri, Lonavala",
@@ -151,7 +151,7 @@ def run_seeder():
             available_slots=28,description="Historic fort and fireflies trail.",
             start_date=datetime.strptime("2026-09-12","%Y-%m-%d").date(),
             end_date=datetime.strptime("2026-09-13","%Y-%m-%d").date(),
-            status="Open",assigned_staff_id=s_objects["Anjali Desai"].id
+            status="Open",assigned_staff_id=s_objects["Anjali Desai"].id,price=1200
         )
         tk8=Trek(
             trek_name="Harishchandragad Trek",location="Sahyadri, Bhandardara",
@@ -159,7 +159,7 @@ def run_seeder():
             available_slots=14,description="Famous for Konkan Kada cliff.",
             start_date=datetime.strptime("2026-08-01","%Y-%m-%d").date(),
             end_date=datetime.strptime("2026-08-02","%Y-%m-%d").date(),
-            status="Closed",assigned_staff_id=s_objects["Rahul Bose"].id
+            status="Closed",assigned_staff_id=s_objects["Rahul Bose"].id,price=2000
         )
         tk9=Trek(
             trek_name="Kalsubai Peak Trek",location="Sahyadri, Igatpuri",
@@ -167,7 +167,7 @@ def run_seeder():
             available_slots=17,description="Highest peak of Maharashtra.",
             start_date=datetime.strptime("2026-06-10","%Y-%m-%d").date(),
             end_date=datetime.strptime("2026-06-11","%Y-%m-%d").date(),
-            status="Completed",assigned_staff_id=s_objects["Vikram Singh"].id
+            status="Completed",assigned_staff_id=s_objects["Vikram Singh"].id,price=1500
         )
         tk10=Trek(
             trek_name="Lohagad Fort Trek",location="Sahyadri, Pune",
@@ -175,7 +175,7 @@ def run_seeder():
             available_slots=40,description="Iron fort with ancient Buddhist caves nearby.",
             start_date=datetime.strptime("2026-10-15","%Y-%m-%d").date(),
             end_date=datetime.strptime("2026-10-15","%Y-%m-%d").date(),
-            status="Pending"
+            status="Pending",price=800
         )
         
         db.session.add_all([tk1,tk2,tk3,tk4,tk5,tk6,tk7,tk8,tk9,tk10])

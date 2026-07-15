@@ -106,12 +106,21 @@ def dashboard():
         Booking.booking_status.in_(["Completed","Cancelled"])
     ).order_by(Booking.booking_date.desc()).limit(4).all()
     
-    cnt_bk = Booking.query.filter_by(user_id=current_user.id, booking_status="Booked").count()
+    cnt_ongoing = Booking.query.join(Trek).filter(
+        Booking.user_id == current_user.id,
+        Booking.booking_status == "Booked",
+        Trek.status == "Ongoing"
+    ).count()
+    cnt_bk = Booking.query.join(Trek).filter(
+        Booking.user_id == current_user.id,
+        Booking.booking_status == "Booked",
+        Trek.status != "Ongoing"
+    ).count()
     cnt_done = Booking.query.filter_by(user_id=current_user.id, booking_status="Completed").count()
     cnt_cancel = Booking.query.filter_by(user_id=current_user.id, booking_status="Cancelled").count()
     return render_template("user/dashboard.html",
         open_treks=open_t, my_active_bookings=active_bk,
-        recent_history=past_bk, booked_count=cnt_bk,
+        recent_history=past_bk, booked_count=cnt_bk, ongoing_count=cnt_ongoing,
         completed_count=cnt_done, cancelled_count=cnt_cancel)
 
 @user_bp.route("/booking/<int:booking_id>/cancel",methods=["POST"])
@@ -142,3 +151,21 @@ def trek_detail(trek_id):
     t_obj = Trek.query.get_or_404(trek_id)
     eb_obj = Booking.query.filter_by(user_id=current_user.id, trek_id=trek_id, booking_status="Booked").first()
     return render_template("user/trek_detail.html", trek=t_obj, existing_booking=eb_obj)
+
+@user_bp.route("/booking/<int:booking_id>/pay",methods=["GET","POST"])
+@login_required
+@trekker_required
+def pay_booking(booking_id):
+    bk_obj= Booking.query.get_or_404(booking_id)
+    if bk_obj.user_id!= current_user.id:
+        flash("Unauthorized.","danger")
+        return redirect(url_for("user.bookings"))
+    if bk_obj.payment_status=="Paid":
+        flash("Already paid.","info")
+        return redirect(url_for("user.bookings"))
+    if request.method =="POST":
+        bk_obj.payment_status ="Paid"
+        db.session.commit()
+        flash("Payment successful!","success")
+        return redirect(url_for("user.bookings"))
+    return render_template("user/payment.html", booking=bk_obj)

@@ -14,7 +14,7 @@ class User(UserMixin, db.Model):
     updated_at = db.Column(db.DateTime, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     staff_profile = db.relationship("StaffProfile", uselist=False, back_populates="user", cascade="all, delete-orphan")
     bookings = db.relationship("Booking", back_populates="user", lazy=True, cascade="all, delete-orphan")
-    assigned_treks = db.relationship("Trek", back_populates="assigned_staff", lazy=True)
+    assigned_treks =db.relationship("Trek", back_populates="assigned_staff", lazy=True)
     def __repr__(self):
         return f"<User id={self.id} email={self.email} role={self.role} status={self.status}>"
 
@@ -49,6 +49,7 @@ class Trek(db.Model):
     assigned_staff_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
     created_at =db.Column(db.DateTime, nullable=False, server_default=db.func.current_timestamp())
     image_path = db.Column(db.String(255), nullable=True)
+    price = db.Column(db.Integer, nullable=False, default=1000)
     updated_at = db.Column(db.DateTime, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     assigned_staff =db.relationship("User", back_populates="assigned_treks")
     bookings = db.relationship("Booking", back_populates="trek", lazy=True, cascade="all, delete-orphan")

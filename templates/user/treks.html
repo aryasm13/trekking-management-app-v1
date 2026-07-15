@@ -49,6 +49,9 @@
           Slots: <strong>{{ t.available_slots }}</strong>/{{ t.total_slots }}
           {% if t.available_slots == 0 %}<span class="text-danger"> (Full)</span>{% endif %}
         </p>
+        <p class="mb-2">
+          Price: <strong>₹{{ t.price }}</strong> per head
+        </p>
         {% if t.id in booked_trek_ids %}
         <span class="badge bg-success">Already Booked</span>
         {% endif %}

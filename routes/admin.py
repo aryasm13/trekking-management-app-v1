@@ -29,6 +29,14 @@ def parse_trek_form_data( f , current_trek = None ):
         errs.append("Invalid status value.")
 
     try:
+        price_val=int(f.get("price",1000))
+        if price_val < 0:
+            errs.append("Price per head cannot be negative.")
+    except ValueError:
+        price_val=1000
+        errs.append("Price must be a number.")
+
+    try:
         dur=int(f.get("duration_days",0))
         if dur < 1:
             errs.append("Duration must be at least 1 day.")
@@ -72,6 +80,7 @@ def parse_trek_form_data( f , current_trek = None ):
         current_trek.assigned_staff_id = s_id
         current_trek.status = stat
         current_trek.image_path = img or None
+        current_trek.price = price_val
         return current_trek, []
     else:
         new_t = Trek(
@@ -80,7 +89,7 @@ def parse_trek_form_data( f , current_trek = None ):
             total_slots=slots,available_slots=slots,
             description=desc,start_date=d1,end_date=d2,
             assigned_staff_id=s_id,status="Pending",
-            image_path=img or None
+            image_path=img or None,price=price_val
         )
         return new_t, []
 
@@ -98,6 +107,7 @@ def dashboard():
         "Approved": Trek.query.filter_by(status="Approved").count(),
         "Open": Trek.query.filter_by(status="Open").count(),
         "Closed": Trek.query.filter_by(status="Closed").count(),
+        "Ongoing": Trek.query.filter_by(status="Ongoing").count(),
         "Completed": Trek.query.filter_by(status="Completed").count()
     }
     recent_b = Booking.query.order_by(Booking.booking_date.desc()).limit(8).all()

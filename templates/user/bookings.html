@@ -10,7 +10,7 @@
 {% if bookings %}
 <table class="table table-bordered table-hover">
   <thead class="table-light">
-    <tr><th>#</th><th>Trek</th><th>Location</th><th>Dates</th><th>Booked On</th><th>Trek Status</th><th>Action</th></tr>
+    <tr><th>#</th><th>Trek</th><th>Location</th><th>Dates</th><th>Booked On</th><th>Trek Status</th><th>Payment</th><th>Action</th></tr>
   </thead>
   <tbody>
   {% for b in bookings %}
@@ -21,6 +21,16 @@
       <td><small>{{ b.trek.start_date.strftime('%d %b') }} - {{ b.trek.end_date.strftime('%d %b %Y') }}</small></td>
       <td>{{ b.booking_date.strftime('%d %b %Y') }}</td>
       <td><span class="status-badge status-{{ b.trek.status.lower() }}">{{ b.trek.status }}</span></td>
+      <td>
+        {% if b.payment_status == 'Paid' %}
+        <span class="badge bg-success">Paid</span>
+        {% elif b.payment_status == 'Pending' %}
+        <span class="badge bg-warning text-dark">Pending</span>
+        <a href="{{ url_for('user.pay_booking', booking_id=b.id) }}" class="btn btn-xs btn-success py-0 px-1 font-size-xs" style="font-size:0.75rem;">Pay</a>
+        {% else %}
+        <span class="badge bg-secondary">{{ b.payment_status }}</span>
+        {% endif %}
+      </td>
       <td>
         {% if b.trek.status not in ['Completed', 'Ongoing'] %}
         <form method="POST" action="{{ url_for('user.cancel_booking', booking_id=b.id) }}" class="d-inline" onsubmit="return confirm('Cancel this booking?')">

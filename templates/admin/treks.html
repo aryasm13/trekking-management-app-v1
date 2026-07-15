@@ -33,7 +33,7 @@
   {% for t in treks %}
     <tr>
       <td>{{ t.id }}</td>
-      <td>{{ t.trek_name }}<br><small class="text-muted">{{ t.duration_days }} day(s)</small></td>
+      <td>{{ t.trek_name }}<br><small class="text-muted">{{ t.duration_days }} day(s) &middot; ₹{{ t.price }}</small></td>
       <td>{{ t.location }}</td>
       <td><span class="diff-{{ t.difficulty.lower() }}">{{ t.difficulty }}</span></td>
       <td><small>{{ t.start_date.strftime('%d %b %Y') }} to {{ t.end_date.strftime('%d %b %Y') }}</small></td>

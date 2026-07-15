@@ -21,6 +21,7 @@
         <tr><th>End</th><td>{{ trek.end_date.strftime('%d %b %Y') }}</td></tr>
         <tr><th>Total Slots</th><td>{{ trek.total_slots }}</td></tr>
         <tr><th>Available</th><td>{{ trek.available_slots }}</td></tr>
+        <tr><th>Price per head</th><td>₹{{ trek.price }}</td></tr>
       </table>
       {% if trek.description %}<p class="text-muted small">{{ trek.description }}</p>{% endif %}
     </div>
