@@ -18,17 +18,14 @@ This application manages trekking activities involving administrators, trek staf
 - SQLAlchemy
 
 ## How to Run the Project (Step-by-Step)
-
-### 1. Prerequisites
-- Python 3.8 or above installed on your system.
-
-### 2. Extract & Open Project
+ 
+### 1. Extract & Open Project
 Unzip the files and open the project directory in your terminal:
 ```bash
-cd "23f3002123/trekking-management-app-v1"
+cd "trekking-management-app-v1"
 ```
-
-### 3. Setup Virtual Environment
+ 
+### 2. Setup Virtual Environment
 * **Windows (PowerShell)**:
   ```powershell
   python -m venv venv
@@ -39,14 +36,14 @@ cd "23f3002123/trekking-management-app-v1"
   python3 -m venv venv
   source venv/bin/activate
   ```
-
-### 4. Install Requirements
+ 
+### 3. Install Requirements
 Run this command to install Flask and other dependencies:
 ```bash
 pip install -r requirements.txt
 ```
-
-### 5. Running the Application
+ 
+### 4. Running the Application
 Run the python app:
 ```bash
 python app.py
